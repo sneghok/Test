@@ -32,11 +32,11 @@ public class Main {
         WebElement logo = driver.findElement(By.xpath("//img[@title='Pornhub']"));
 
         Assert.assertTrue(logo.isDisplayed());
-//        try {
-//            Thread.sleep(10000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+       try {
+            Thread.sleep(10000);
+       } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterTest
