@@ -1,23 +1,30 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
-import net.bytebuddy.asm.Advice;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class Main {
 
     WebDriver driver;
+    WebDriverWait wait;
+    Actions actions;
 
     @BeforeTest
     public void setupClass() {
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
+        wait = new WebDriverWait(driver, 10);
+        driver.manage().window().maximize();
+        actions = new Actions(driver);
     }
 
     @Test
@@ -26,21 +33,42 @@ public class Main {
         driver.manage().window().maximize();
 
         WebElement input = driver.findElement(By.xpath("//input[@name='q']"));
-         input.sendKeys("pornhub"+ Keys.ENTER);
+        input.sendKeys("pornhub" + Keys.ENTER);
         WebElement firstLink = driver.findElement(By.xpath("//a[contains(@href,'http')]/h3"));
         firstLink.click();
         WebElement logo = driver.findElement(By.xpath("//img[@title='Pornhub']"));
 
         Assert.assertTrue(logo.isDisplayed());
-       try {
-            Thread.sleep(10000);
-       } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
     }
-//hello
-    @AfterTest
+
+    //hello
+    @Test
+    public void test2() {
+        driver.get("https://rozetka.com.ua/");
+
+        WebElement input = driver.findElement(By.xpath("//input[@name='search']"));
+        input.sendKeys("монитор" + Keys.ENTER);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@class='goods-tile__title']")));
+
+        WebElement firstLink1 = driver.findElement(By.xpath("//span[@class='goods-tile__title']"));
+        firstLink1.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//rz-product-navbar")));
+
+        WebElement buyButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@aria-label='Купить']")));
+        actions.moveToElement(buyButton).perform();
+        buyButton.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='modal__content']")));
+
+        WebElement checkoutButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-testid='cart-receipt-submit-order']")));
+        checkoutButton.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h1[contains(@class,'checkout-heading')]")));
+
+    }
+
+    @AfterClass
     public void quitdriver() {
         driver.quit();
     }
+
 }
