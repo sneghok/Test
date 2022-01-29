@@ -18,6 +18,31 @@ public class Main {
     WebDriverWait wait;
     Actions actions;
 
+    //First test
+    //URLs
+    private String googleURL = "https://google.com";
+
+    //Links
+    private String firstLinkOnTheMainPageXpath = "//a[contains(@href,'http')]/h3";
+
+    //Fields
+    private String searchFieldXpath = "//input[@name='q']";
+
+    //Logos
+    private String logoXpath = "//img[@title='Pornhub']";
+
+    //Second test
+    //Buttons
+
+
+    /**
+     * Methods
+     */
+    public void setup(String URL){
+        driver.get(URL);
+        driver.manage().window().maximize();
+    }
+
     @BeforeTest
     public void setupClass() {
         WebDriverManager.chromedriver().setup();
@@ -27,19 +52,26 @@ public class Main {
         actions = new Actions(driver);
     }
 
+    /**
+     * Test 1 - Assert that logo is displayed when we click to the first link on the main page
+     */
     @Test
     public void test() {
-        driver.get("https://google.com");
-        driver.manage().window().maximize();
+        //Go to the main page
+        //Set window to the maximize
+        setup(googleURL);
 
-        WebElement input = driver.findElement(By.xpath("//input[@name='q']"));
+        //Set search field
+        WebElement input = driver.findElement(By.xpath(searchFieldXpath));
         input.sendKeys("pornhub" + Keys.ENTER);
-        WebElement firstLink = driver.findElement(By.xpath("//a[contains(@href,'http')]/h3"));
+
+        //Click the first link
+        WebElement firstLink = driver.findElement(By.xpath(firstLinkOnTheMainPageXpath));
         firstLink.click();
-        WebElement logo = driver.findElement(By.xpath("//img[@title='Pornhub']"));
 
+        //Assert that logo is displayed
+        WebElement logo = driver.findElement(By.xpath(logoXpath));
         Assert.assertTrue(logo.isDisplayed());
-
     }
 
     //hello
@@ -67,7 +99,7 @@ public class Main {
     }
 
     @AfterClass
-    public void quitdriver() {
+    public void quitDriver() {
         driver.quit();
     }
 
