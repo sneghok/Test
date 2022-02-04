@@ -1,3 +1,5 @@
+package com.softserve.edu.hw4;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -21,15 +23,32 @@ public class Main {
     //First test
     //URLs
     private String googleURL = "https://google.com";
+    private String rozetkaURL = "https://rozetka.com.ua/";
 
     //Links
     private String firstLinkOnTheMainPageXpath = "//a[contains(@href,'http')]/h3";
+    private String firstLinkOnTheLaptopPageXpath = "//span[@class='goods-tile__title']";
+
+    //Clickable elements
+    private String monitorClickable = "//span[@class='goods-tile__title']";
+    private String buyButtonClickable = "//button[@aria-label='Купить']";
+    private String checkoutButtonClickable = "//a[@data-testid='cart-receipt-submit-order']";
 
     //Fields
     private String searchFieldXpath = "//input[@name='q']";
+    private String searchFieldRozetkaXpath = "//input[@name='search']";
+
+    //Element presents
+    private String basketPresents = "//div[@class='modal__content']";
+    private String formCheckoutPresents = "//h1[contains(@class,'checkout-heading')]";
+    private String monitorPagePresents = "//rz-product-navbar";
 
     //Logos
     private String logoXpath = "//img[@title='Pornhub']";
+
+
+
+
 
     //Second test
     //Buttons
@@ -77,24 +96,28 @@ public class Main {
     //hello
     @Test
     public void test2() {
-        driver.get("https://rozetka.com.ua/");
+        driver.get(rozetkaURL);
 
-        WebElement input = driver.findElement(By.xpath("//input[@name='search']"));
+        //Set search field
+        WebElement input = driver.findElement(By.xpath(searchFieldRozetkaXpath));
         input.sendKeys("монитор" + Keys.ENTER);
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@class='goods-tile__title']")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(monitorClickable)));
 
-        WebElement firstLink1 = driver.findElement(By.xpath("//span[@class='goods-tile__title']"));
+        //Click on th first link
+        WebElement firstLink1 = driver.findElement(By.xpath(firstLinkOnTheLaptopPageXpath));
         firstLink1.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//rz-product-navbar")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(monitorPagePresents)));
 
-        WebElement buyButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@aria-label='Купить']")));
+        //Click on Buy button
+        WebElement buyButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(buyButtonClickable)));
         actions.moveToElement(buyButton).perform();
         buyButton.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='modal__content']")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(basketPresents)));
 
-        WebElement checkoutButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@data-testid='cart-receipt-submit-order']")));
+        //Click on Checkout button
+        WebElement checkoutButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(checkoutButtonClickable)));
         checkoutButton.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h1[contains(@class,'checkout-heading')]")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(formCheckoutPresents)));
 
     }
 
@@ -104,3 +127,4 @@ public class Main {
     }
 
 }
+
